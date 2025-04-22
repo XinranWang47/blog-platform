@@ -4,7 +4,7 @@ import './App.css'
 function App() {
   return <div>
     <nav>
-      <Link style={{fontSize:'20px'}} to='/'>Home</Link> | <Link style={{fontSize:'20px'}} to='/articles'>Articles</Link>  |  <Link style={{fontSize:'20px'}} to='/create'>Create post</Link>
+      <Link className='text-[20px] text-gray-600' to='/'>Home</Link> | <Link className='text-[20px] text-gray-600' to='/articles'>Articles</Link>  |  <Link className='text-[20px] text-gray-600' to='/create'>Create post</Link>
     </nav> 
     <hr/>
     <Outlet/>
