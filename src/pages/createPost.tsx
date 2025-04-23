@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useArticles } from './articleContext';
 
 export default function CreatePost() {
-  const {addArticle} = useArticles();
-
+  const { addArticle } = useArticles();
+  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
@@ -11,19 +11,22 @@ export default function CreatePost() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    addArticle({ title, description, content, category });
-    
-    console.log('new post: ', {
+    const newArticle = {
+      id: Date.now(), 
       title,
       description,
       content,
       category,
-    });
+      date: new Date().toISOString(),
+    };
+    
+    addArticle(newArticle); 
 
     setTitle('');
     setDescription('');
     setContent('');
     setCategory('');
+
     alert('Post created successfully!');
   };
 

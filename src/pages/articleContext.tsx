@@ -1,5 +1,5 @@
 
-import { createContext, useState, ReactNode, useContext } from 'react';
+import { createContext, useState, ReactNode, useContext, useEffect } from 'react';
 
 type Article = {
   id: number;
@@ -22,29 +22,44 @@ const ArticleContext = createContext<ArticleContextType | undefined>(undefined);
 export const ArticleProvider = ({ children }: { children: ReactNode }) => {
   const [articles, setArticles] = useState<Article[]>([]);
 
+  useEffect(() => {
+    const savedArticles = localStorage.getItem('articles');
+    if (savedArticles) {
+      setArticles(JSON.parse(savedArticles));
+    }
+  }, []);
+
+  const updateLocalStorage = (newArticles: Article[]) => {
+    localStorage.setItem('articles', JSON.stringify(newArticles));
+  };
+
   const addArticle = (article: Omit<Article, 'id' | 'date'>) => {
     const newArticle: Article = {
       ...article,
       id: Date.now(),
       date: new Date().toISOString().slice(0, 10),
     };
-    setArticles(prev => [newArticle, ...prev]);
+    const updatedArticles = [newArticle, ...articles];
+    setArticles(updatedArticles);
+    updateLocalStorage(updatedArticles); 
   };
 
   const deleteArticle = (id: number) => {
-    setArticles(prev => prev.filter(article => article.id !== id));
+    const updatedArticles = articles.filter(article => article.id !== id);
+    setArticles(updatedArticles);
+    updateLocalStorage(updatedArticles); 
   };
 
   const updateArticle = (updatedArticle: Article) => {
-    setArticles(prev =>
-      prev.map(article =>
-        article.id === updatedArticle.id ? updatedArticle : article
-      )
+    const updatedArticles = articles.map(article =>
+      article.id === updatedArticle.id ? updatedArticle : article
     );
+    setArticles(updatedArticles);
+    updateLocalStorage(updatedArticles); 
   };
 
   return (
-    <ArticleContext.Provider value={{ articles, addArticle,deleteArticle,updateArticle}}>
+    <ArticleContext.Provider value={{ articles, addArticle, deleteArticle, updateArticle }}>
       {children}
     </ArticleContext.Provider>
   );
