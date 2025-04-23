@@ -1,8 +1,16 @@
 import { Link } from 'react-router-dom'
 import { Typewriter } from 'react-simple-typewriter'
 import { FaSearch } from "react-icons/fa"
+import { articles as defaultArticles } from '../articles'
+import { useArticles } from './articleContext';
 
 export default function Home(){
+  const { articles } = useArticles();
+
+  const latestArticles = [...defaultArticles, ...articles]
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 3);
+
   return <div className="min-h-screen flex flex-col">
   <div className="flex-grow flex flex-col items-center justify-start pt-32">
     <h1 className="text-9xl drop-shadow-lg" style={{ fontFamily: 'Sacramento, cursive' }}>
@@ -27,16 +35,13 @@ export default function Home(){
       />
       <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"/>
     </div>
-    <div className="mt-8 text-center">
-      <h3 className="text-xl">Recent articles:</h3>
-      <p>📝 How I Fixed a TypeScript Error</p>
-      <p>📝 A quick story of debugging and learning...</p>
-      <p>The Moment I Understood useEffect Once and For All</p>
+    <div className="mt-8 text-center flex flex-col space-y-2">
+        <h3 className="text-xl mb-2 mt-4">Recent articles:</h3>
+          {latestArticles.map((article) => (
+            <Link className='underline' to={`/articles/${article.id}`}>{article.title}</Link>
+          ))}
       <Link to="/articles" className="text-blue-500 underline">[Read more]</Link>
     </div>
   </div>
-  <footer className="text-center py-4 mt-auto text-sm text-gray-500">
-    ©{new Date().getFullYear()} Aurora's Blog
-  </footer>
 </div>
 }
