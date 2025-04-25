@@ -22,7 +22,10 @@ const router = createBrowserRouter([
       {path: '/edit/:id', element: <EditArticle/>},
     ]
   }
-])
+],
+{
+  basename: '/blog-platform',
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
